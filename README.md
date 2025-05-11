@@ -1,45 +1,75 @@
+# 🌍 AR Map
 
-# Project Title
+AR Map je PHP projekt z integriranim A-Frame in LeafletJS za prikaz razširjene resničnosti in geolokacijskih 3D modelov (.glb) na spletni mapi. Aplikacija omogoča prijavo, registracijo, ustvarjanje in pridruževanje skupinam ter nalaganje 3D modelov, ki se nato prikažejo kot markerji na zemljevidu.
 
-Ar map
+![GitHub Screenshot](https://raw.githubusercontent.com/pungiu/armap/main/assets/github_preview.png)
 
+---
 
-## SETUP
+## 📦 Funkcionalnosti
 
-Setup database for the project
+- 🌐 LeafletJS zemljevid z AR integracijo (A-Frame, AR.js)
+- 📍 Prikaz markerjev iz baze (tabela `models`)
+- 🧑‍🤝‍🧑 Registracija, prijava uporabnikov
+- 👥 Ustvarjanje in pridruževanje skupinam (z geslom)
+- 📤 Nalaganje `.glb` modelov z lokacijo
+- 🔐 Varnostno shranjevanje gesel (password_hash)
+- 🧭 Responsive dizajn (TailwindCSS + minimalističen UI)
+
+---
+
+## 🛠️ Namestitev in zagon
+
+### 1. Kloniraj repozitorij
 
 ```bash
-  sudo mysql -u root -p
-  
-  CREATE DATABASE ar_location_db;
-CREATE USER 'ar_user'@'localhost' IDENTIFIED BY 'your_strong_password';
-GRANT ALL PRIVILEGES ON ar_location_db.* TO 'ar_user'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
+
+git clone https://github.com/pungiu/armap.git
+cd armap
+
+CREATE DATABASE ar_location_db;
+USE ar_location_db;
+
+CREATE TABLE usr (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  username VARCHAR(256) NOT NULL,
+  mail VARCHAR(256) NOT NULL,
+  password VARCHAR(1024) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE groups (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  group_name VARCHAR(100) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  description TEXT DEFAULT NULL,
+  created_by_user_id INT(11) DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY (created_by_user_id),
+  CONSTRAINT groups_ibfk_1 FOREIGN KEY (created_by_user_id) REFERENCES usr(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE group_members (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,
+  group_id INT(11) NOT NULL,
+  joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY (user_id),
+  KEY (group_id),
+  CONSTRAINT group_members_ibfk_1 FOREIGN KEY (user_id) REFERENCES usr(id),
+  CONSTRAINT group_members_ibfk_2 FOREIGN KEY (group_id) REFERENCES groups(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE models (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    latitude DECIMAL(10, 7) NOT NULL,
-    longitude DECIMAL(11, 7) NOT NULL,
-    model_url VARCHAR(255) NOT NULL,
-    base_scale FLOAT DEFAULT 5.0,
-    min_scale FLOAT DEFAULT 0.5,
-    max_scale FLOAT DEFAULT 15.0,
-    target_altitude FLOAT DEFAULT 0.0,
-    reference_distance FLOAT DEFAULT 25.0,
-    visibility_threshold FLOAT DEFAULT 200.0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-INSERT INTO models (name, latitude, longitude, model_url, base_scale, target_altitude, reference_distance, visibility_threshold) VALUES ('test', 46.3620104, 15.1134535, 'assets/untitled.glb', 1, 400, 50, 500);
-
-mysql -u ar_user -p ar_location_db
-
-```
-    
-## 🔗 Links
-[![website](https://img.shields.io/website?url=http%3A//pungi.org/)](https://pungi.org/)
-
-
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  latitude DOUBLE NOT NULL,
+  longitude DOUBLE NOT NULL,
+  model_url VARCHAR(512) NOT NULL,
+  target_altitude FLOAT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
