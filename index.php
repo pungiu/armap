@@ -36,7 +36,6 @@ session_start();
             >
             <a-camera gps-camera rotation-reader> </a-camera>
         </a-scene>
-        <?php var_dump($_SESSION); ?>
 
         <div class="map-container" id="map-container">
             <div id="map"></div>
