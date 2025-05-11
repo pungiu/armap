@@ -127,3 +127,35 @@ body {
 
 </body>
 </html>
+
+
+function gumbi(element) {
+    const elementID = element.id;
+    const arScene = document.getElementById('ar-scene');
+    let moz = document.getElementById("moda");
+    let zem = document.getElementById('map-container');
+    console.log('Debug: ', elementID);
+
+    if (elementID === 'icon1') {
+      const gumbE = document.getElementById(elementID);
+      arScene.style.display = 'none';
+      moz.style.display = 'flex';
+      zem.style.height = 'calc(30% - 2.5px)';
+    }
+    if (elementID === 'icon2'){
+
+    }
+
+    if (elementID === 'icon3'){
+
+    }
+  }
+
+<div class="moznosti" id="moda">
+            <div id="login">
+                <form action="login.php" method="post">
+                    <label for="regin">Vnesi uporabnisko ime</label>
+                    <input type="text">
+                </form>
+            </div>
+        </div>

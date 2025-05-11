@@ -1,4 +1,3 @@
-// --- A-Frame Component for Interaction ---
 AFRAME.registerComponent("model-interact", {
     init: function () {
       const entity = this.el;
@@ -33,7 +32,6 @@ AFRAME.registerComponent("model-interact", {
     },
   });
 
-  // --- Main Application Logic ---
   window.onload = () => {
     const statusElement = document.getElementById("status");
     const arScene = document.getElementById("ar-scene");
@@ -358,7 +356,6 @@ AFRAME.registerComponent("model-interact", {
       showError(message);
     };
 
-    // --- Initialization ---
     updateStatus("Requesting location permission...");
     if ("geolocation" in navigator) {
       navigator.geolocation.watchPosition(
@@ -367,11 +364,32 @@ AFRAME.registerComponent("model-interact", {
         {
           enableHighAccuracy: HIGH_ACCURACY,
           timeout: LOCATION_TIMEOUT,
-          // *** Use the updated maximumAge value ***
           maximumAge: LOCATION_MAX_AGE_MS,
         }
       );
     } else {
       showError("Geolocation is not supported by this browser.");
     }
-  }; // End window.onload
+  };
+
+  function gumbi(element) {
+      const elementID = element.id;
+      const arScene = document.getElementById('ar-scene');
+      let moz = document.getElementById("moda");
+      let zem = document.getElementById('map-container');
+      //console.log('Debug: ', elementID);
+
+      if (elementID === 'icon1') {
+        const gumbE = document.getElementById(elementID);
+        arScene.style.display = 'none';
+        moz.style.display = 'flex';
+        zem.style.height = 'calc(30% - 2.5px)';
+      }
+      if (elementID === 'icon2'){
+
+      }
+
+      if (elementID === 'icon3'){
+
+      }
+    }
