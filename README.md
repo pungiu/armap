@@ -69,7 +69,16 @@ CREATE TABLE models (
   latitude DOUBLE NOT NULL,
   longitude DOUBLE NOT NULL,
   model_url VARCHAR(512) NOT NULL,
+  base_scale FLOAT DEFAULT 1.0,
+  min_scale FLOAT DEFAULT 0.5,
+  max_scale FLOAT DEFAULT 2.0,
+  reference_distance FLOAT DEFAULT 10.0,
+  visibility_threshold FLOAT DEFAULT 100.0,
   target_altitude FLOAT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
+  created_by_user_id INT(11) DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY idx_created_by_user_id (created_by_user_id),
+  CONSTRAINT models_fk_user FOREIGN KEY (created_by_user_id) REFERENCES usr(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
